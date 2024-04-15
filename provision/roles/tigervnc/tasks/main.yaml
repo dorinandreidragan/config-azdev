@@ -1,0 +1,53 @@
+---
+- name: if vnc_password is not set, exit
+  fail:
+    msg: "Error: VNC password not set in environment variable. Exiting..."
+  when: vnc_password is not defined
+
+- name: install tigervnc
+  become: true
+  apt:
+    name: tigervnc-standalone-server
+    state: present
+    update_cache: true
+
+- name: create ~/.vnc directory
+  file:
+    path: /home/{{ ansible_user }}/.vnc
+    state: directory
+
+- name: encrypt VNC password using vncpasswd
+  shell: echo "{{ vnc_password }}" | vncpasswd -f > /home/{{ ansible_user }}/.vnc/passwd
+  args:
+    executable: /bin/bash
+
+- name: set ownership and permissions for VNC password file
+  file:
+    path: /home/{{ ansible_user }}/.vnc/passwd
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: '0600'
+
+- name: create ~/.vnc/config file
+  copy:
+    content: |
+      # Specify session number (replace with your desired number)
+      Session=1
+
+      # Specify desired resolution (replace with your preferred width and height)
+      Geometry=1024x768
+    dest: /home/{{ ansible_user }}/.vnc/config
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: '0644'
+
+- name: create xstartup.sh script
+  copy:
+    content: |
+      #!/bin/bash
+      exec i3
+    dest: /home/{{ ansible_user }}/.vnc/xstartup.sh
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: '0755'
+

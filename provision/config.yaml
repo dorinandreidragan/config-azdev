@@ -1,0 +1,13 @@
+---
+- hosts: all
+  gather_facts: false
+  vars:
+    ansible_user: '{{ lookup("env", "ansible_user") }}'
+
+  roles:
+    - name: i3
+      tags: i3
+    - name: pulse-secure
+      tags: pulse-secure
+    - name: tigervnc
+      tags: tigervnc

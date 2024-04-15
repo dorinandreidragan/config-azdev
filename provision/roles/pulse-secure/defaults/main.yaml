@@ -1,0 +1,3 @@
+---
+pulse_version: "22.6r1.0-b26825"
+pulse_filename: "ps-pulse-linux-{{ pulse_version }}-64bit-installer.deb"

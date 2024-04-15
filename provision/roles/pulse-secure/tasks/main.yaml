@@ -1,0 +1,42 @@
+- name: install Pulse Secure dependencies
+  become: true
+  apt:
+    name: [
+      acl,
+      bzip2,
+      libnss3-tools,
+      libwebkit2gtk-4.0-37,
+      libgtkmm-3.0-1v5,
+    ]
+    state: present
+    update_cache: yes
+
+- name: copy Pulse Secure *.deb package to remote host
+  copy:
+    src: "files/{{ pulse_filename }}"
+    dest: "/tmp/{{ pulse_filename }}"
+
+- name: install Pulse Secure *.deb package and choose yes to keep the old configuration
+  become: true
+  apt:
+    deb: /tmp/{{ pulse_filename }}
+    state: present
+
+- name: remove Pulse Secure *.deb package from remote host
+  become: true
+  file:
+    path: /tmp/{{ pulse_filename }}
+    state: absent
+
+- name: add Pulse Secure to user profile PATH
+  lineinfile:
+    path: /home/{{ ansible_user }}/.profile
+    line: 'export PATH=$PATH:/opt/pulsesecure/bin'
+    create: yes
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: 0644
+
+- name: install Chrome Embedded Framework
+  become: true
+  command: /opt/pulsesecure/bin/setup_cef.sh install

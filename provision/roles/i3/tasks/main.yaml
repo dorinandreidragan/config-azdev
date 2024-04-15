@@ -1,0 +1,39 @@
+---
+- name: install i3, i3status, i3lock
+  become: true
+  apt:
+    name: [
+      i3,
+      i3status,
+      i3lock,
+    ]
+    state: present
+    update_cache: yes
+
+- name: create ~/.config/i3 directory
+  file:
+    path: /home/{{ ansible_user }}/.config/i3
+    state: directory
+
+- name: copy config from /etc/i3/config to user home
+  copy:
+    src: /etc/i3/config
+    dest: /home/{{ ansible_user }}/.config/i3/config
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: 0644
+
+- name: replace Mod4 with Mod1 in i3 config
+  replace:
+    path: /home/{{ ansible_user }}/.config/i3/config
+    regexp: 'Mod4'
+    replace: 'Mod1'
+    backup: yes
+
+- name: replace i3-sensible-terminal with gnome-terminal in i3 config
+  replace:
+    path: /home/{{ ansible_user }}/.config/i3/config
+    regexp: 'i3-sensible-terminal'
+    replace: 'gnome-terminal'
+    backup: yes
+

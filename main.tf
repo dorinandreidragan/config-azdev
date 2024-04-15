@@ -58,8 +58,9 @@ module "linux_vm" {
     vm_admin_password = var.admin_password
 
     vm_name = "lin-vm"
-    vm_size = "Standard_B2ts_v2" # 2 vCPUs, 1 GiB memory, $8.20/month = $0.011/hour => for 100h = $1.1
-    # vm_size = "Standard_B2als_v2" # 2 vCPUs, 4 GiB memory, $29.52/month = $0.041/hour => for 100h = $4.1
+    # vm_size = "Standard_B2ts_v2" # 2 vCPUs, 1 GiB memory, $8.20/month = $0.011/hour => for 100h = $1.1
+    vm_size = "Standard_B2als_v2" # 2 vCPUs, 4 GiB memory, $29.52/month = $0.041/hour => for 100h = $4.1
+    # vm_size = "Standard_D4s_v2"
     # vm_size = "Standard_D4s_v5" # 4 vCPUs, 16 GiB memory, $157.16/month = $0.218/hour => for 100h = $21.8
     vm_location = azurerm_resource_group.dev_rg.location
     vm_resource_group_name = azurerm_resource_group.dev_rg.name

@@ -1,0 +1,4 @@
+all:
+  hosts:
+    dev-lin-vm:
+      ansible_host: dev-lin-vm.westeurope.cloudapp.azure.com
